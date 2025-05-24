@@ -1,0 +1,28 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library Management API - CSE341 W03",
+    "description": "API for managing books and members, built with Node.js, Express, and Mongoose for CSE341 Week 03.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "https://library-api-cse341.onrender.com", "description": "Render Deployment" },
+    { "url": "http://localhost:3000", "description": "Local Development" }
+  ],
+  "paths": {
+    "/books": {
+      "get": { "summary": "Get all books", "responses": { "200": { "description": "List of books" }, "500": { "description": "Server error" } } },
+      "post": { "summary": "Create a book", "responses": { "201": { "description": "Book created" }, "400": { "description": "Invalid input" } } }
+    },
+    "/members": {
+      "get": { "summary": "Get all members", "responses": { "200": { "description": "List of members" }, "500": { "description": "Server error" } } },
+      "post": { "summary": "Create a member", "responses": { "201": { "description": "Member created" }, "400": { "description": "Invalid input" } } }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": { "type": "object", "properties": { "title": { "type": "string" }, "author": { "type": "string" }, "isbn": { "type": "string" }, "genre": { "type": "string" }, "publishedYear": { "type": "number" }, "price": { "type": "number" }, "stock": { "type": "number" }, "description": { "type": "string" } } },
+      "Member": { "type": "object", "properties": { "firstName": { "type": "string" }, "lastName": { "type": "string" }, "email": { "type": "string" }, "membershipId": { "type": "string" }, "joinDate": { "type": "string" }, "booksBorrowed": { "type": "array" }, "status": { "type": "string" } } }
+    }
+  }
+}
