@@ -11,28 +11,197 @@
   ],
   "paths": {
     "/books": {
-      "get": { "summary": "Get all books", "responses": { "200": { "description": "List of books" }, "500": { "description": "Server error" } } },
-      "post": { "summary": "Create a book", "responses": { "201": { "description": "Book created" }, "400": { "description": "Invalid input" } } }
+      "get": {
+        "summary": "Get all books",
+        "responses": {
+          "200": { "description": "List of books" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "summary": "Create a book",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Book" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Book created" },
+          "400": { "description": "Invalid input" }
+        }
+      }
     },
     "/members": {
-      "get": { "summary": "Get all members", "responses": { "200": { "description": "List of members" }, "500": { "description": "Server error" } } },
-      "post": { "summary": "Create a member", "responses": { "201": { "description": "Member created" }, "400": { "description": "Invalid input" } } }
+      "get": {
+        "summary": "Get all members",
+        "responses": {
+          "200": { "description": "List of members" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "summary": "Create a member",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Member" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Member created" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "summary": "Get book by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Book details" },
+          "404": { "description": "Book not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "put": {
+        "summary": "Update a book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Book" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Book updated" },
+          "400": { "description": "Invalid input" },
+          "404": { "description": "Book not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Book deleted" },
+          "404": { "description": "Book not found" }
+        }
+      }
+    },
+    "/members/{id}": {
+      "get": {
+        "summary": "Get member by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Member details" },
+          "404": { "description": "Member not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "put": {
+        "summary": "Update a member",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Member" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Member updated" },
+          "400": { "description": "Invalid input" },
+          "404": { "description": "Member not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a member",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Member deleted" },
+          "404": { "description": "Member not found" }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "Book": { "type": "object", "properties": { "title": { "type": "string" }, "author": { "type": "string" }, "isbn": { "type": "string" }, "genre": { "type": "string" }, "publishedYear": { "type": "number" }, "price": { "type": "number" }, "stock": { "type": "number" }, "description": { "type": "string" } } },
-      "Member": { "type": "object", "properties": { "firstName": { "type": "string" }, "lastName": { "type": "string" }, "email": { "type": "string" }, "membershipId": { "type": "string" }, "joinDate": { "type": "string" }, "booksBorrowed": { "type": "array" }, "status": { "type": "string" } } }
+      "Book": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "author": { "type": "string" },
+          "isbn": { "type": "string" },
+          "genre": { "type": "string" },
+          "publishedYear": { "type": "number" },
+          "price": { "type": "number" },
+          "stock": { "type": "number" },
+          "description": { "type": "string" }
+        },
+        "required": ["title", "author", "isbn", "genre", "publishedYear", "price", "stock", "description"]
+      },
+      "Member": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string" },
+          "membershipId": { "type": "string" },
+          "joinDate": { "type": "string" },
+          "booksBorrowed": { "type": "array" },
+          "status": { "type": "string" }
+        },
+        "required": ["firstName", "lastName", "email", "membershipId", "joinDate", "status"]
+      }
     }
-  },
-  "/books/{id}": {
-    "get": { "summary": "Get book by ID", "responses": { "200": { "description": "Book details" }, "404": { "description": "Book not found" }, "500": { "description": "Server error" } } },
-    "put": { "summary": "Update a book", "responses": { "200": { "description": "Book updated" }, "400": { "description": "Invalid input" }, "404": { "description": "Book not found" } } },
-    "delete": { "summary": "Delete a book", "responses": { "200": { "description": "Book deleted" }, "404": { "description": "Book not found" } } }
-  },
-  "/members/{id}": {
-    "get": { "summary": "Get member by ID", "responses": { "200": { "description": "Member details" }, "404": { "description": "Member not found" }, "500": { "description": "Server error" } } },
-    "put": { "summary": "Update a member", "responses": { "200": { "description": "Member updated" }, "400": { "description": "Invalid input" }, "404": { "description": "Member not found" } } },
-    "delete": { "summary": "Delete a member", "responses": { "200": { "description": "Member deleted" }, "404": { "description": "Member not found" } } }
   }
 }
