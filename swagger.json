@@ -9,166 +9,236 @@
     { "url": "https://library-api-cse341.onrender.com", "description": "Render Deployment" },
     { "url": "http://localhost:3000", "description": "Local Development" }
   ],
+  "tags": [
+    { "name": "Books", "description": "Operations related to books" },
+    { "name": "Members", "description": "Operations related to library members" }
+  ],
   "paths": {
     "/books": {
       "get": {
+        "tags": ["Books"],
         "summary": "Get all books",
+        "description": "Retrieve a list of all books in the library.",
         "responses": {
-          "200": { "description": "List of books" },
-          "500": { "description": "Server error" }
+          "200": {
+            "description": "List of books",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Book" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "post": {
+        "tags": ["Books"],
         "summary": "Create a book",
+        "description": "Add a new book to the library.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Book" }
+              "schema": { "$ref": "#/components/schemas/BookInput" }
             }
           }
         },
         "responses": {
-          "201": { "description": "Book created" },
-          "400": { "description": "Invalid input" }
-        }
-      }
-    },
-    "/members": {
-      "get": {
-        "summary": "Get all members",
-        "responses": {
-          "200": { "description": "List of members" },
-          "500": { "description": "Server error" }
-        }
-      },
-      "post": {
-        "summary": "Create a member",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Member" }
+          "201": {
+            "description": "Book created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
             }
-          }
-        },
-        "responses": {
-          "201": { "description": "Member created" },
-          "400": { "description": "Invalid input" }
+          },
+          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       }
     },
     "/books/{id}": {
       "get": {
+        "tags": ["Books"],
         "summary": "Get book by ID",
+        "description": "Retrieve details of a specific book by its ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the book" }
         ],
         "responses": {
-          "200": { "description": "Book details" },
-          "404": { "description": "Book not found" },
-          "500": { "description": "Server error" }
+          "200": {
+            "description": "Book details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
+            }
+          },
+          "404": { "description": "Book not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "500": { "description": "Server error", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "put": {
+        "tags": ["Books"],
         "summary": "Update a book",
+        "description": "Update details of a specific book by its ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the book" }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Book" }
+              "schema": { "$ref": "#/components/schemas/BookInput" }
             }
           }
         },
         "responses": {
-          "200": { "description": "Book updated" },
-          "400": { "description": "Invalid input" },
-          "404": { "description": "Book not found" }
+          "200": {
+            "description": "Book updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Book" }
+              }
+            }
+          },
+          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "404": { "description": "Book not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "delete": {
+        "tags": ["Books"],
         "summary": "Delete a book",
+        "description": "Remove a specific book from the library by its ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the book" }
         ],
         "responses": {
-          "200": { "description": "Book deleted" },
-          "404": { "description": "Book not found" }
+          "200": {
+            "description": "Book deleted",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "message": { "type": "string" } } }
+              }
+            }
+          },
+          "404": { "description": "Book not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
+        }
+      }
+    },
+    "/members": {
+      "get": {
+        "tags": ["Members"],
+        "summary": "Get all members",
+        "description": "Retrieve a list of all library members.",
+        "responses": {
+          "200": {
+            "description": "List of members",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Member" }
+                }
+              }
+            }
+          },
+          "500": { "description": "Server error", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
+        }
+      },
+      "post": {
+        "tags": ["Members"],
+        "summary": "Create a member",
+        "description": "Add a new member to the library.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MemberInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Member created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Member" }
+              }
+            }
+          },
+          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       }
     },
     "/members/{id}": {
       "get": {
+        "tags": ["Members"],
         "summary": "Get member by ID",
+        "description": "Retrieve details of a specific member by their ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the member" }
         ],
         "responses": {
-          "200": { "description": "Member details" },
-          "404": { "description": "Member not found" },
-          "500": { "description": "Server error" }
+          "200": {
+            "description": "Member details",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Member" }
+              }
+            }
+          },
+          "404": { "description": "Member not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "500": { "description": "Server error", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "put": {
+        "tags": ["Members"],
         "summary": "Update a member",
+        "description": "Update details of a specific member by their ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the member" }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Member" }
+              "schema": { "$ref": "#/components/schemas/MemberInput" }
             }
           }
         },
         "responses": {
-          "200": { "description": "Member updated" },
-          "400": { "description": "Invalid input" },
-          "404": { "description": "Member not found" }
+          "200": {
+            "description": "Member updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Member" }
+              }
+            }
+          },
+          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "404": { "description": "Member not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "delete": {
+        "tags": ["Members"],
         "summary": "Delete a member",
+        "description": "Remove a specific member from the library by their ID.",
         "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the member" }
         ],
         "responses": {
-          "200": { "description": "Member deleted" },
-          "404": { "description": "Member not found" }
+          "200": {
+            "description": "Member deleted",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "properties": { "message": { "type": "string" } } }
+              }
+            }
+          },
+          "404": { "description": "Member not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       }
     }
@@ -178,27 +248,56 @@
       "Book": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "author": { "type": "string" },
-          "isbn": { "type": "string" },
-          "genre": { "type": "string" },
-          "publishedYear": { "type": "number" },
-          "price": { "type": "number" },
-          "stock": { "type": "number" },
-          "description": { "type": "string" }
+          "_id": { "type": "string", "description": "Unique identifier for the book" },
+          "title": { "type": "string", "example": "To Kill a Mockingbird" },
+          "author": { "type": "string", "example": "Harper Lee" },
+          "isbn": { "type": "string", "example": "978-0446310789" },
+          "genre": { "type": "string", "example": "Fiction" },
+          "publishedYear": { "type": "number", "example": 1960 },
+          "price": { "type": "number", "example": 9.99 },
+          "stock": { "type": "number", "example": 10 },
+          "description": { "type": "string", "example": "A classic novel about racial injustice and the loss of innocence in a small Southern town." }
+        },
+        "required": ["title", "author", "isbn", "genre", "publishedYear", "price", "stock", "description"]
+      },
+      "BookInput": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "To Kill a Mockingbird" },
+          "author": { "type": "string", "example": "Harper Lee" },
+          "isbn": { "type": "string", "example": "978-0446310789" },
+          "genre": { "type": "string", "example": "Fiction" },
+          "publishedYear": { "type": "number", "example": 1960 },
+          "price": { "type": "number", "example": 9.99 },
+          "stock": { "type": "number", "example": 10 },
+          "description": { "type": "string", "example": "A classic novel about racial injustice and the loss of innocence in a small Southern town." }
         },
         "required": ["title", "author", "isbn", "genre", "publishedYear", "price", "stock", "description"]
       },
       "Member": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "email": { "type": "string" },
-          "membershipId": { "type": "string" },
-          "joinDate": { "type": "string" },
-          "booksBorrowed": { "type": "array" },
-          "status": { "type": "string" }
+          "_id": { "type": "string", "description": "Unique identifier for the member" },
+          "firstName": { "type": "string", "example": "Jane" },
+          "lastName": { "type": "string", "example": "Doe" },
+          "email": { "type": "string", "example": "jane.doe@example.com" },
+          "membershipId": { "type": "string", "example": "MEM12345" },
+          "joinDate": { "type": "string", "format": "date", "example": "2023-01-15" },
+          "booksBorrowed": { "type": "array", "items": { "type": "string" }, "example": ["978-0446310789"] },
+          "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" }
+        },
+        "required": ["firstName", "lastName", "email", "membershipId", "joinDate", "status"]
+      },
+      "MemberInput": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "example": "Jane" },
+          "lastName": { "type": "string", "example": "Doe" },
+          "email": { "type": "string", "example": "jane.doe@example.com" },
+          "membershipId": { "type": "string", "example": "MEM12345" },
+          "joinDate": { "type": "string", "format": "date", "example": "2023-01-15" },
+          "booksBorrowed": { "type": "array", "items": { "type": "string" }, "example": ["978-0446310789"] },
+          "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" }
         },
         "required": ["firstName", "lastName", "email", "membershipId", "joinDate", "status"]
       }
