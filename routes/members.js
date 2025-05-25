@@ -21,4 +21,26 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Get a single member by ID
+router.put('/:id', async (req, res) => {
+  try {
+    const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!member) return res.status(404).json({ error: 'Member not found' });
+    res.json(member);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Delete a member by ID
+router.delete('/:id', async (req, res) => {
+  try {
+    const member = await Member.findByIdAndDelete(req.params.id);
+    if (!member) return res.status(404).json({ error: 'Member not found' });
+    res.json({ message: 'Member deleted' });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = router;

@@ -24,5 +24,15 @@
       "Book": { "type": "object", "properties": { "title": { "type": "string" }, "author": { "type": "string" }, "isbn": { "type": "string" }, "genre": { "type": "string" }, "publishedYear": { "type": "number" }, "price": { "type": "number" }, "stock": { "type": "number" }, "description": { "type": "string" } } },
       "Member": { "type": "object", "properties": { "firstName": { "type": "string" }, "lastName": { "type": "string" }, "email": { "type": "string" }, "membershipId": { "type": "string" }, "joinDate": { "type": "string" }, "booksBorrowed": { "type": "array" }, "status": { "type": "string" } } }
     }
+  },
+  "/books/{id}": {
+    "get": { "summary": "Get book by ID", "responses": { "200": { "description": "Book details" }, "404": { "description": "Book not found" }, "500": { "description": "Server error" } } },
+    "put": { "summary": "Update a book", "responses": { "200": { "description": "Book updated" }, "400": { "description": "Invalid input" }, "404": { "description": "Book not found" } } },
+    "delete": { "summary": "Delete a book", "responses": { "200": { "description": "Book deleted" }, "404": { "description": "Book not found" } } }
+  },
+  "/members/{id}": {
+    "get": { "summary": "Get member by ID", "responses": { "200": { "description": "Member details" }, "404": { "description": "Member not found" }, "500": { "description": "Server error" } } },
+    "put": { "summary": "Update a member", "responses": { "200": { "description": "Member updated" }, "400": { "description": "Invalid input" }, "404": { "description": "Member not found" } } },
+    "delete": { "summary": "Delete a member", "responses": { "200": { "description": "Member deleted" }, "404": { "description": "Member not found" } } }
   }
 }
