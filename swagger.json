@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Library Management API - CSE341 W03",
-    "description": "API for managing books and members, built with Node.js, Express, and Mongoose for CSE341 Week 03.",
+    "description": "API for managing books and members, built by Anderson Okai with Node.js, Express, and Mongoose for CSE341 Week 03.",
     "version": "1.0.0"
   },
   "servers": [
@@ -282,7 +282,7 @@
           "lastName": { "type": "string", "example": "Doe" },
           "email": { "type": "string", "example": "jane.doe@example.com" },
           "membershipId": { "type": "string", "example": "MEM12345" },
-          "joinDate": { "type": "string", "format": "date", "example": "2023-01-15" },
+          "joinDate": { "type": "string", "format": "date-time", "example": "2023-01-15T00:00:00Z" },
           "booksBorrowed": { "type": "array", "items": { "type": "string" }, "example": ["978-0446310789"] },
           "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" }
         },
@@ -295,7 +295,7 @@
           "lastName": { "type": "string", "example": "Doe" },
           "email": { "type": "string", "example": "jane.doe@example.com" },
           "membershipId": { "type": "string", "example": "MEM12345" },
-          "joinDate": { "type": "string", "format": "date", "example": "2023-01-15" },
+          "joinDate": { "type": "string", "format": "date-time", "example": "2023-01-15T00:00:00Z" },
           "booksBorrowed": { "type": "array", "items": { "type": "string" }, "example": ["978-0446310789"] },
           "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" }
         },
