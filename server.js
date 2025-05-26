@@ -5,6 +5,7 @@ const bookRoutes = require('./routes/books');
 const memberRoutes = require('./routes/members');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,7 +32,13 @@ app.use((err, req, res, next) => {
 });
 
 // MongoDB connection
-mongoose.connect(process.env.MONGO_URI, { 
+const mongoUri = process.env.MONGO_URI;
+if (!mongoUri) {
+  console.error('MONGO_URI is not defined in .env file');
+  process.exit(1);
+}
+
+mongoose.connect(mongoUri, { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 })
