@@ -1,17 +1,19 @@
 {
   "name": "library-api-cse341",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Library Management API for CSE341 W03 by Anderson Okai",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["library", "api", "node", "mongoose"],
+  "author": "Anderson Okai",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "express": "^5.1.0",
-    "mongoose": "^8.15.0",
-    "swagger-ui-express": "^5.0.1"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.0",
+    "swagger-ui-express": "^4.1.6",
+    "dotenv": "^16.0.0"
   }
 }
