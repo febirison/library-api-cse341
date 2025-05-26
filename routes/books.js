@@ -22,6 +22,16 @@ router.post('/', async (req, res) => {
 });
 
 // Get a single book by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ error: 'Book not found' });
+    res.json(book);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.put('/:id', async (req, res) => {
   try {
     const book = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
@@ -32,7 +42,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Delete a book by ID
 router.delete('/:id', async (req, res) => {
   try {
     const book = await Book.findByIdAndDelete(req.params.id);
