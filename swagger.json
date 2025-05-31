@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Library Management API - CSE341 W03",
-    "description": "API for managing books and members, built by Anderson Okai with Node.js, Express, and Mongoose for CSE341 Week 03.",
+    "title": "Library Management API - CSE341 W04",
+    "description": "API for managing books and members with GitHub OAuth authentication, built by Anderson Okai for CSE341 Week 04.",
     "version": "1.0.0"
   },
   "servers": [
@@ -11,9 +11,89 @@
   ],
   "tags": [
     { "name": "Books", "description": "Operations related to books" },
-    { "name": "Members", "description": "Operations related to library members" }
+    { "name": "Members", "description": "Operations related to library members" },
+    { "name": "Authentication", "description": "User authentication endpoints" }
   ],
   "paths": {
+    "/auth/github": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Initiate GitHub OAuth login",
+        "description": "Redirects to GitHub for user authentication.",
+        "responses": {
+          "302": { "description": "Redirects to GitHub login page" }
+        }
+      }
+    },
+    "/auth/callback": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "GitHub OAuth callback",
+        "description": "Handles GitHub OAuth callback and returns a JWT token.",
+        "responses": {
+          "200": {
+            "description": "Authentication successful, returns JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string", "example": "jwt_token_here" }
+                  }
+                }
+              }
+            }
+          },
+          "302": { "description": "Redirects to root if authentication fails" }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Log out user",
+        "description": "Logs out the user and destroys the session.",
+        "responses": {
+          "200": {
+            "description": "Logged out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string", "example": "Logged out successfully" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Logout failed", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
+        }
+      }
+    },
+    "/auth/status": {
+      "get": {
+        "tags": ["Authentication"],
+        "summary": "Check authentication status",
+        "description": "Returns the current user's authentication status.",
+        "responses": {
+          "200": {
+            "description": "User authentication status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": { "$ref": "#/components/schemas/User" },
+                    "isAuthenticated": { "type": "boolean", "example": true }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/books": {
       "get": {
         "tags": ["Books"],
@@ -37,7 +117,8 @@
       "post": {
         "tags": ["Books"],
         "summary": "Create a book",
-        "description": "Add a new book to the library.",
+        "description": "Add a new book to the library. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
         "requestBody": {
           "required": true,
           "content": {
@@ -55,7 +136,9 @@
               }
             }
           },
-          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
+          "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "401": { "description": "Authentication required", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "403": { "description": "Invalid token", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       }
     },
@@ -83,7 +166,8 @@
       "put": {
         "tags": ["Books"],
         "summary": "Update a book",
-        "description": "Update details of a specific book by its ID.",
+        "description": "Update details of a specific book by its ID. Requires authentication.",
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "The ID of the book" }
         ],
@@ -105,7 +189,9 @@
             }
           },
           "400": { "description": "Invalid input", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
-          "404": { "description": "Book not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
+          "404": { "description": "Book not found", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "401": { "description": "Authentication required", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } },
+          "403": { "description": "Invalid token", "content": { "application/json": { "schema": { "type": "object", "properties": { "error": { "type": "string" } } } } } }
         }
       },
       "delete": {
@@ -245,6 +331,16 @@
   },
   "components": {
     "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string", "description": "Unique identifier for the user" },
+          "githubId": { "type": "string", "example": "123456" },
+          "username": { "type": "string", "example": "johndoe" },
+          "email": { "type": "string", "example": "johndoe@example.com" },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2025-05-31T00:00:00Z" }
+        }
+      },
       "Book": {
         "type": "object",
         "properties": {
@@ -300,6 +396,13 @@
           "status": { "type": "string", "enum": ["active", "inactive"], "example": "active" }
         },
         "required": ["firstName", "lastName", "email", "membershipId", "joinDate", "status"]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/bookModel');
+const authenticateToken = require('../middleware/auth');
 
 // GET all books
 router.get('/', async (req, res) => {
@@ -14,8 +15,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST a new book
-router.post('/', async (req, res) => {
+// POST a new book (protected)
+router.post('/', authenticateToken, async (req, res) => {
   try {
     const book = new Book(req.body);
     const savedBook = await book.save();
@@ -43,8 +44,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// PUT update a book by ID
-router.put('/:id', async (req, res) => {
+// PUT update a book by ID (protected)
+router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const book = await Book.findByIdAndUpdate(req.params.id, req.body, { 
       new: true, 
